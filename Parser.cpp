@@ -28,6 +28,42 @@ void BMPParser::BMPParser::ReadFileHeader()
 
 void BMPParser::BMPParser::ReadInfoHeader()
 {
+	char buffer[4]{};
+
+	bmpFile.read(buffer, sizeof(DWORD));
+	std::memcpy(&bitMapInfoHeader.biSize, buffer, sizeof(DWORD));
+
+	bmpFile.read(buffer, sizeof(LONG));
+	std::memcpy(&bitMapInfoHeader.biWidth, buffer, sizeof(LONG));
+
+	bmpFile.read(buffer, sizeof(LONG));
+	std::memcpy(&bitMapInfoHeader.biHeight, buffer, sizeof(LONG));
+
+	bmpFile.read(buffer, sizeof(WORD));
+	std::memcpy(&bitMapInfoHeader.biPlanes, buffer, sizeof(WORD));
+	if (bitMapInfoHeader.biPlanes != 1) throw InvalidInfoHeaderException();
+
+	//Bit per pixel
+	bmpFile.read(buffer, sizeof(WORD));
+	std::memcpy(&bitMapInfoHeader.biBitCount, buffer, sizeof(WORD));
+
+	bmpFile.read(buffer, sizeof(DWORD));
+	std::memcpy(&bitMapInfoHeader.biCompression,buffer, sizeof(DWORD));
+
+	bmpFile.read(buffer, sizeof(DWORD));
+	std::memcpy(&bitMapInfoHeader.biSizeImage, buffer, sizeof(DWORD));
+
+	bmpFile.read(buffer, sizeof(LONG));
+	std::memcpy(&bitMapInfoHeader.biXPelsPerMeter, buffer, sizeof(LONG));
+
+	bmpFile.read(buffer, sizeof(LONG));
+	std::memcpy(&bitMapInfoHeader.biYPelsPerMeter, buffer, sizeof(LONG));
+
+	bmpFile.read(buffer, sizeof(DWORD));
+	std::memcpy(&bitMapInfoHeader.biClrUsed, buffer, sizeof(DWORD));
+
+	bmpFile.read(buffer,sizeof(DWORD));
+	std::memcpy(&bitMapInfoHeader.biClrImportant, buffer, sizeof(DWORD));
 }
 
 void BMPParser::BMPParser::Read(std::string filePath)
