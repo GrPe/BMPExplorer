@@ -1,6 +1,12 @@
 #pragma once
 #include <cstdint>
-#include <cstdio> //or <iostream> ???
+#include <fstream>
+#include <string>
+#include <exception>
+
+//debug:
+#include <iostream>
+#define SHOWVAR(a) std::cerr<<(a)<<'\n';
 
 
 namespace BMPParser
@@ -12,13 +18,24 @@ namespace BMPParser
 	class BMPParser
 	{
 	private:
+
+		//handles:
+		std::fstream bmpFile;
+
+		//BitMap Headers:
 		BITMAPFILEHEADER bitMapFileHeader;
 		BITMAPINFOHEADER bitMapInfoHeader;
 
+		void ReadFileHeader();
+		void ReadInfoHeader();
 
-		
+	public:
+		BMPParser() = default;
+		~BMPParser() = default;
+		BMPParser(BMPParser&) = default;
+		BMPParser(BMPParser&&) = delete;
 
-
+		void Read(std::string filePath);
 	};
 
 
