@@ -1,8 +1,10 @@
 #pragma once
+
+#include "BMPParserException.hpp"
+
 #include <cstdint>
 #include <fstream>
 #include <string>
-#include <exception>
 
 //debug:
 #include <iostream>
@@ -37,9 +39,6 @@ namespace BMPParser
 
 		void Read(std::string filePath);
 	};
-
-
-
 
 	class BITMAPFILEHEADER
 	{
