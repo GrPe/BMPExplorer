@@ -8,8 +8,6 @@
 
 //debug:
 #include <iostream>
-#define SHOWVAR(a) std::cerr<<(a)<<'\n';
-
 
 namespace BMPParser
 {
@@ -23,6 +21,8 @@ namespace BMPParser
 
 		//handles:
 		std::fstream bmpFile;
+		bool isDataRead{false};
+		uint8_t* data{nullptr};
 
 		//BitMap Headers:
 		BITMAPFILEHEADER bitMapFileHeader;
@@ -30,6 +30,7 @@ namespace BMPParser
 
 		void ReadFileHeader();
 		void ReadInfoHeader();
+		void ReadData();
 
 	public:
 		BMPParser() = default;
