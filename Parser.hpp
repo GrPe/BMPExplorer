@@ -1,15 +1,20 @@
 #pragma once
 #include <cstdint>
+#include <cstdio> //or <iostream> ???
+
 
 namespace BMPParser
 {
-	using WORD = uint8_t;
-	using DWORD = uint16_t;
+	using WORD = uint16_t;
+	using DWORD = uint32_t;
+	using LONG = int32_t;
 
 	class BMPParser
 	{
 	private:
 		BITMAPFILEHEADER bitMapFileHeader;
+		BITMAPINFOHEADER bitMapInfoHeader;
+
 
 		
 
@@ -26,6 +31,22 @@ namespace BMPParser
 		WORD bfReserved1;
 		WORD bfReserved2;
 		DWORD bfOffBits;
+		friend class BMPParser;
+	};
+
+	class BITMAPINFOHEADER
+	{
+		DWORD biSize;
+		LONG biWidth;
+		LONG biHeight;
+		WORD biPlanes;
+		WORD biBitCount;
+		DWORD biCompression;
+		DWORD biSizeImage;
+		LONG biXPelsPerMeter;
+		LONG biYPelsPerMeter;
+		DWORD biClrUsed;
+		DWORD biClrImportant;
 		friend class BMPParser;
 	};
 }
