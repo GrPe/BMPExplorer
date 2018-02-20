@@ -84,6 +84,7 @@ void BMPParser::BMPParser::ReadData()
 BMPParser::BMPParser::~BMPParser()
 {
 	if (data != nullptr) delete[] data;
+	if (bmpFile.is_open) bmpFile.close();
 }
 
 void BMPParser::BMPParser::Read(std::string filePath)
