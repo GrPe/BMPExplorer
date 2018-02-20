@@ -22,6 +22,7 @@ namespace BMPParser
 		//handles:
 		std::fstream bmpFile;
 		bool isDataRead{false};
+		uint64_t sizeOfData{};
 		uint8_t* data{nullptr};
 
 		//BitMap Headers:
@@ -44,8 +45,8 @@ namespace BMPParser
 	class BITMAPFILEHEADER
 	{
 		WORD bfType;
-		DWORD bfSize;
-		WORD bfReserved1;
+		DWORD bfSize; 
+		WORD bfReserved1; 
 		WORD bfReserved2;
 		DWORD bfOffBits;
 		friend class BMPParser;

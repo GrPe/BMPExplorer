@@ -66,6 +66,13 @@ void BMPParser::BMPParser::ReadInfoHeader()
 	std::memcpy(&bitMapInfoHeader.biClrImportant, buffer, sizeof(DWORD));
 }
 
+void BMPParser::BMPParser::ReadData()
+{
+	sizeOfData = static_cast<uint64_t>(bitMapInfoHeader.biWidth)*static_cast<uint64_t>(bitMapInfoHeader.biHeight)*static_cast<uint64_t>(bitMapInfoHeader.biBitCount / 8);
+	data = new uint8_t[sizeOfData];
+	bmpFile.read(reinterpret_cast<char*>(data), sizeof(uint8_t)*sizeOfData);
+}
+
 void BMPParser::BMPParser::Read(std::string filePath)
 {
 	bmpFile.open(filePath, std::ios::in | std::ios::binary);
