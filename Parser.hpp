@@ -7,9 +7,6 @@
 #include <string>
 #include <cmath>
 
-//debug:
-#include <iostream>
-
 namespace BMPParser
 {
 	using WORD = uint16_t;
