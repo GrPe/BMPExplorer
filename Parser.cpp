@@ -84,7 +84,7 @@ void BMPParser::BMPParser::ReadData()
 BMPParser::BMPParser::~BMPParser()
 {
 	if (data != nullptr) delete[] data;
-	if (bmpFile.is_open) bmpFile.close();
+	if (bmpFile.is_open()) bmpFile.close();
 }
 
 void BMPParser::BMPParser::Read(std::string filePath)
@@ -111,4 +111,13 @@ void BMPParser::BMPParser::Read(std::string filePath)
 	isDataRead = true;
 
 	bmpFile.close();
+}
+
+char* BMPParser::BMPParser::GetRawData()
+{
+	char* rawData = new char[sizeOfData + bitMapFileHeader.bfSize + bitMapInfoHeader.biSize];
+	std::memcpy(rawData, reinterpret_cast<void*>(&bitMapFileHeader), sizeof(bitMapFileHeader));
+	std::memcpy(rawData + sizeof(bitMapFileHeader), reinterpret_cast<void*>(&bitMapInfoHeader),sizeof(bitMapInfoHeader));
+	std::memcpy(rawData + sizeof(bitMapFileHeader) + sizeof(bitMapInfoHeader), reinterpret_cast<char*>(data),sizeof(char)*sizeOfData);
+	return rawData;
 }

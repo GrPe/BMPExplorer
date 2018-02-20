@@ -1,6 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include "Parser.hpp"
 #include "BMPParserException.hpp"
+#include "BMPViewer.hpp"
 
 
 int main(int argc, char** argv)
@@ -10,6 +13,11 @@ int main(int argc, char** argv)
 	std::string path{argv[1]};
 	BMPParser::BMPParser parser;
 	parser.Read(path);
+
+	BMPViewer::BMPViewer viewer;
+	char* rawData = parser.GetRawData();
+	viewer.LoadBitMap(rawData);
+	viewer.ShowBitMap();
 
 	return 0;
 }

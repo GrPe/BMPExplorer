@@ -13,20 +13,19 @@ namespace BMPParser
 	using DWORD = uint32_t;
 	using LONG = int32_t;
 
-	class  BITMAPFILEHEADER
+	struct  BITMAPFILEHEADER
 	{
-	private:
+
 		WORD bfType;
 		DWORD bfSize;
 		WORD bfReserved1;
 		WORD bfReserved2;
 		DWORD bfOffBits;
-		friend class BMPParser;
+		//friend class BMPParser;
 	};
 
-	class BITMAPINFOHEADER
+	struct  BITMAPINFOHEADER
 	{
-	private:
 		DWORD biSize;
 		LONG biWidth;
 		LONG biHeight;
@@ -38,7 +37,7 @@ namespace BMPParser
 		LONG biYPelsPerMeter;
 		DWORD biClrUsed;
 		DWORD biClrImportant;
-		friend class BMPParser;
+		//friend class BMPParser;
 	};
 
 	class BMPParser
@@ -66,7 +65,7 @@ namespace BMPParser
 		BMPParser(BMPParser&&) = delete;
 
 		void Read(std::string filePath);
+		char* GetRawData();
 	};
 
-	
 }
