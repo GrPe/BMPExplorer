@@ -65,7 +65,10 @@ namespace BMPParser
 		BMPParser(BMPParser&&) = delete;
 
 		void Read(std::string filePath);
-		char* GetRawData();
+		uint8_t* GetRawData();
+		int GetXSize() const noexcept;
+		int GetYSize() const noexcept;
+		//char* GetRawData();
 	};
 
 }

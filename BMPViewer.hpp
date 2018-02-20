@@ -14,7 +14,7 @@ namespace BMPViewer
 		BMPViewer(BMPViewer&) = default;
 		BMPViewer(BMPViewer&&) = delete;
 
-		void LoadBitMap(const char* rawData);
+		void LoadBitMap(const uint8_t* rawData, int sizeX, int sizeY);
 		void ShowBitMap();
 	};
 }

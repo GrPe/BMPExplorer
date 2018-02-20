@@ -1,4 +1,5 @@
 #include "Parser.hpp"
+#include <iostream>
 
 void BMPParser::BMPParser::ReadFileHeader()
 {
@@ -67,8 +68,10 @@ void BMPParser::BMPParser::ReadData()
 {
 	sizeOfData = abs(bitMapInfoHeader.biWidth*bitMapInfoHeader.biHeight*(bitMapInfoHeader.biBitCount / 8));
 	data = new uint8_t[sizeOfData];
-	bmpFile.read(reinterpret_cast<char*>(data), sizeof(uint8_t)*sizeOfData);
-	if (data == nullptr)
+	//char* buffer = new char[sizeOfData];
+	//bmpFile.read(buffer,sizeOfData);
+	bmpFile.read((char*)data, sizeOfData);
+	/*if (data == nullptr)
 	{
 		bmpFile.clear();
 		throw InvalidDataFormatException();
@@ -78,7 +81,8 @@ void BMPParser::BMPParser::ReadData()
 		if (data != nullptr) delete[] data;
 		bmpFile.clear();
 		throw InvalidDataFormatException();
-	}
+	}*/
+	std::cerr << (int)data[0xfa5f0] << std::endl;
 }
 
 BMPParser::BMPParser::~BMPParser()
@@ -113,11 +117,21 @@ void BMPParser::BMPParser::Read(std::string filePath)
 	bmpFile.close();
 }
 
-char* BMPParser::BMPParser::GetRawData()
+uint8_t * BMPParser::BMPParser::GetRawData()
 {
-	char* rawData = new char[sizeOfData + bitMapFileHeader.bfSize + bitMapInfoHeader.biSize];
-	std::memcpy(rawData, reinterpret_cast<void*>(&bitMapFileHeader), sizeof(bitMapFileHeader));
-	std::memcpy(rawData + sizeof(bitMapFileHeader), reinterpret_cast<void*>(&bitMapInfoHeader),sizeof(bitMapInfoHeader));
-	std::memcpy(rawData + sizeof(bitMapFileHeader) + sizeof(bitMapInfoHeader), reinterpret_cast<char*>(data),sizeof(char)*sizeOfData);
-	return rawData;
+	return data;
+}
+
+int BMPParser::BMPParser::GetXSize() const noexcept
+{
+	if (isDataRead) 
+		return bitMapInfoHeader.biWidth;
+	else return 0;
+}
+
+int BMPParser::BMPParser::GetYSize() const noexcept
+{
+	if (isDataRead)
+		return bitMapInfoHeader.biHeight;
+	else return 0;
 }

@@ -1,9 +1,8 @@
 #include "BMPViewer.hpp"
 
-void BMPViewer::BMPViewer::LoadBitMap(const char* rawData)
+void BMPViewer::BMPViewer::LoadBitMap(const uint8_t* rawData, int sizeX, int sizeY)
 {
-	if(!image.loadFromMemory(rawData, sizeof(rawData)))
-		throw std::exception();
+	image.create(sizeX, sizeY, rawData);
 }
 
 void BMPViewer::BMPViewer::ShowBitMap()

@@ -15,8 +15,7 @@ int main(int argc, char** argv)
 	parser.Read(path);
 
 	BMPViewer::BMPViewer viewer;
-	char* rawData = parser.GetRawData();
-	viewer.LoadBitMap(rawData);
+	viewer.LoadBitMap(parser.GetRawData(),parser.GetXSize(),parser.GetYSize());
 	viewer.ShowBitMap();
 
 	return 0;
