@@ -1,7 +1,5 @@
 #include "Parser.hpp"
 
-#define SHOWVAR(a) std::cerr<<(a)<<'\n';
-
 void BMPParser::BMPParser::ReadFileHeader()
 {
 	char buffer[4]{};
@@ -43,7 +41,6 @@ void BMPParser::BMPParser::ReadInfoHeader()
 	std::memcpy(&bitMapInfoHeader.biPlanes, buffer, sizeof(WORD));
 	if (bitMapInfoHeader.biPlanes != 1) throw InvalidInfoHeaderException();
 
-	//Bit per pixel
 	bmpFile.read(buffer, sizeof(WORD));
 	std::memcpy(&bitMapInfoHeader.biBitCount, buffer, sizeof(WORD));
 
@@ -68,9 +65,25 @@ void BMPParser::BMPParser::ReadInfoHeader()
 
 void BMPParser::BMPParser::ReadData()
 {
-	sizeOfData = static_cast<uint64_t>(bitMapInfoHeader.biWidth)*static_cast<uint64_t>(bitMapInfoHeader.biHeight)*static_cast<uint64_t>(bitMapInfoHeader.biBitCount / 8);
+	sizeOfData = abs(bitMapInfoHeader.biWidth*bitMapInfoHeader.biHeight*(bitMapInfoHeader.biBitCount / 8));
 	data = new uint8_t[sizeOfData];
 	bmpFile.read(reinterpret_cast<char*>(data), sizeof(uint8_t)*sizeOfData);
+	if (data == nullptr)
+	{
+		bmpFile.clear();
+		throw InvalidDataFormatException();
+	}
+	if (bmpFile.fail())
+	{
+		if (data != nullptr) delete[] data;
+		bmpFile.clear();
+		throw InvalidDataFormatException();
+	}
+}
+
+BMPParser::BMPParser::~BMPParser()
+{
+	if (data != nullptr) delete[] data;
 }
 
 void BMPParser::BMPParser::Read(std::string filePath)
@@ -78,11 +91,9 @@ void BMPParser::BMPParser::Read(std::string filePath)
 	bmpFile.open(filePath, std::ios::in | std::ios::binary);
 	if (!bmpFile)
 	{
-		SHOWVAR("PROBLEM WITH OPEN FILE");
 		bmpFile.clear();
 		throw InvalidFilePathException();
 	}
-	SHOWVAR("OPEN FILE");
 
 	try
 	{
@@ -92,10 +103,11 @@ void BMPParser::BMPParser::Read(std::string filePath)
 	}
 	catch (std::exception& exp)
 	{
-		SHOWVAR("EXCEPTION IN READ()");
+		bmpFile.close();
+		isDataRead = false;
 		throw exp;
 	}
 	isDataRead = true;
-}
 
-#undef SHOWVAR
+	bmpFile.close();
+}

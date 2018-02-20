@@ -7,7 +7,7 @@ namespace BMPParser
 	{
 		const char* what() const override
 		{
-			return "Invalid BitMapFileHeader format\n";
+			return "Invalid BitMapFileHeader Format\n";
 		}
 	};
 
@@ -15,7 +15,7 @@ namespace BMPParser
 	{
 		const char* what() const override
 		{
-			return "Invalid BitMapInfoHeader format\n";
+			return "Invalid BitMapInfoHeader Format\n";
 		}
 	};
 
@@ -23,7 +23,15 @@ namespace BMPParser
 	{
 		const char* what() const override
 		{
-			return "Invalid file path\n";
+			return "Invalid File Path\n";
+		}
+	};
+
+	class InvalidDataFormatException : std::exception
+	{
+		const char* what() const override
+		{
+			return "Invalid Data Format\n";
 		}
 	};
 }

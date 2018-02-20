@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <fstream>
 #include <string>
+#include <cmath>
 
 //debug:
 #include <iostream>
@@ -15,38 +16,12 @@ namespace BMPParser
 	using DWORD = uint32_t;
 	using LONG = int32_t;
 
-	class BMPParser
+	class  BITMAPFILEHEADER
 	{
 	private:
-
-		//handles:
-		std::fstream bmpFile;
-		bool isDataRead{false};
-		uint64_t sizeOfData{};
-		uint8_t* data{nullptr};
-
-		//BitMap Headers:
-		BITMAPFILEHEADER bitMapFileHeader;
-		BITMAPINFOHEADER bitMapInfoHeader;
-
-		void ReadFileHeader();
-		void ReadInfoHeader();
-		void ReadData();
-
-	public:
-		BMPParser() = default;
-		~BMPParser() = default;
-		BMPParser(BMPParser&) = default;
-		BMPParser(BMPParser&&) = delete;
-
-		void Read(std::string filePath);
-	};
-
-	class BITMAPFILEHEADER
-	{
 		WORD bfType;
-		DWORD bfSize; 
-		WORD bfReserved1; 
+		DWORD bfSize;
+		WORD bfReserved1;
 		WORD bfReserved2;
 		DWORD bfOffBits;
 		friend class BMPParser;
@@ -54,6 +29,7 @@ namespace BMPParser
 
 	class BITMAPINFOHEADER
 	{
+	private:
 		DWORD biSize;
 		LONG biWidth;
 		LONG biHeight;
@@ -67,4 +43,33 @@ namespace BMPParser
 		DWORD biClrImportant;
 		friend class BMPParser;
 	};
+
+	class BMPParser
+	{
+	private:
+
+		//handles:
+		std::fstream bmpFile;
+		bool isDataRead{false};
+		unsigned int sizeOfData{};
+		uint8_t* data{nullptr};
+
+		//BitMap Headers:
+		BITMAPFILEHEADER bitMapFileHeader;
+		BITMAPINFOHEADER bitMapInfoHeader;
+
+		void ReadFileHeader();
+		void ReadInfoHeader();
+		void ReadData();
+
+	public:
+		BMPParser() = default;
+		~BMPParser();
+		BMPParser(BMPParser&) = delete;
+		BMPParser(BMPParser&&) = delete;
+
+		void Read(std::string filePath);
+	};
+
+	
 }
