@@ -73,7 +73,7 @@ void BMPParser::BMPParser::ReadData()
 	if (static_cast<int>(bmpFile.tellg()) != bitMapFileHeader.bfOffBits) 
 		bmpFile.seekg(bitMapFileHeader.bfOffBits, SEEK_SET);
 
-	uint32_t pitch = (bitMapInfoHeader.biWidth * 3 + 3)&~3U;
+	uint32_t pitch = (bitMapInfoHeader.biWidth * 3 + 3)&~3U; //??
 	uint32_t y = 0;
 	int32_t dy = 1;
 	if (bitMapInfoHeader.biHeight < 0)
@@ -86,7 +86,7 @@ void BMPParser::BMPParser::ReadData()
 		y = bitMapInfoHeader.biHeight - 1;
 		dy = -1;
 	}
-	uint8_t *pixels = reinterpret_cast<uint8_t*>(&surface->pixels);
+
 	auto buffer = new char[sizeOfData];
 
 	while (y >= 0 && y < bitMapInfoHeader.biHeight)
@@ -94,7 +94,9 @@ void BMPParser::BMPParser::ReadData()
 		bmpFile.read(&buffer[y*surface->pitch],bitMapInfoHeader.biWidth*3);
 		y += dy;
 	}
-	surface->pixels = reinterpret_cast<uint8_t*>(buffer);
+
+	std::memcpy(surface->pixels, buffer, sizeOfData);
+	delete[] buffer;
 }
 
 BMPParser::BMPParser::~BMPParser()
