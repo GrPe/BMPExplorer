@@ -18,5 +18,7 @@ int main(int argc, char** argv)
 	viewer.LoadBitMap(parser.GetRawData(),parser.GetXSize(),parser.GetYSize());
 	viewer.ShowBitMap();
 
+	int x;
+	std::cin >> x;
 	return 0;
 }

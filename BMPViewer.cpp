@@ -1,6 +1,6 @@
 #include "BMPViewer.hpp"
 
-void BMPViewer::BMPViewer::LoadBitMap(const uint8_t* rawData, int sizeX, int sizeY)
+void BMPViewer::BMPViewer::LoadBitMap(sf::Uint8* rawData, int sizeX, int sizeY)
 {
 	image.create(sizeX, sizeY, rawData);
 }

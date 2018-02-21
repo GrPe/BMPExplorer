@@ -14,7 +14,7 @@ namespace BMPViewer
 		BMPViewer(BMPViewer&) = default;
 		BMPViewer(BMPViewer&&) = delete;
 
-		void LoadBitMap(const uint8_t* rawData, int sizeX, int sizeY);
+		void LoadBitMap(sf::Uint8* rawData, int sizeX, int sizeY);
 		void ShowBitMap();
 	};
 }

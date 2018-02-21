@@ -68,21 +68,19 @@ void BMPParser::BMPParser::ReadData()
 {
 	sizeOfData = abs(bitMapInfoHeader.biWidth*bitMapInfoHeader.biHeight*(bitMapInfoHeader.biBitCount / 8));
 	data = new uint8_t[sizeOfData];
-	//char* buffer = new char[sizeOfData];
-	//bmpFile.read(buffer,sizeOfData);
-	bmpFile.read((char*)data, sizeOfData);
-	/*if (data == nullptr)
-	{
-		bmpFile.clear();
-		throw InvalidDataFormatException();
-	}
-	if (bmpFile.fail())
-	{
-		if (data != nullptr) delete[] data;
-		bmpFile.clear();
-		throw InvalidDataFormatException();
-	}*/
-	std::cerr << (int)data[0xfa5f0] << std::endl;
+	std::unique_ptr<char[]> buffer(new char[sizeOfData]);
+	bmpFile.read(buffer.get(), sizeOfData);
+	std::memcpy(data, buffer.get(), sizeOfData);
+	//for (int i = 0; i < sizeOfData/3; i ++)
+	//{
+		//bmpFile.read(buffer.get(), 3);
+		//std::memcpy(data + i * 3, buffer.get(), 3);
+	//}
+	//std::unique_ptr<unsigned char[]> buffer(new unsigned char[sizeOfData]);
+	//bmpFile.read(reinterpret_cast<char*>(buffer.get()), sizeOfData);
+	//std::memcpy(data, buffer.get(), sizeOfData);
+	//std::cerr << std::hex << (int)data[0x222c35-54] << std::endl;
+	//std::cerr << bmpFile.tellg() << std::endl;
 }
 
 BMPParser::BMPParser::~BMPParser()
