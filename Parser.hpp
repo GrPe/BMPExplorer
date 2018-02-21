@@ -1,3 +1,5 @@
+//Works only with 24bit RGB bitmap
+
 #pragma once
 
 #include <SDL.h>

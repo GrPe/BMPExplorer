@@ -73,7 +73,6 @@ void BMPParser::BMPParser::ReadData()
 	if (static_cast<int>(bmpFile.tellg()) != bitMapFileHeader.bfOffBits) 
 		bmpFile.seekg(bitMapFileHeader.bfOffBits, SEEK_SET);
 
-	uint32_t pitch = (bitMapInfoHeader.biWidth * 3 + 3)&~3U; //??
 	uint32_t y = 0;
 	int32_t dy = 1;
 	if (bitMapInfoHeader.biHeight < 0)
