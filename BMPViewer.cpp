@@ -1,34 +1,34 @@
 #include "BMPViewer.hpp"
 
-void BMPViewer::BMPViewer::LoadBitMap(sf::Uint8* rawData, int sizeX, int sizeY)
+void BMPViewer::BMPViewer::ShowBitMap(SDL_Surface* image)
 {
-	image.create(sizeX, sizeY, rawData);
-}
-
-void BMPViewer::BMPViewer::ShowBitMap()
-{
+	if (image == NULL) throw std::exception();
 	//prepare window
-	sf::RenderWindow window(sf::VideoMode(1024, 800), "BMP Viewer 1.0");
-	window.setFramerateLimit(15);
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Window * window = SDL_CreateWindow("BMP Viewer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		WINDOW_W, WINDOW_H,0);
 
-	//prepare image to display
-	sf::Texture imageToDisplay;
-	sf::Sprite imageTD;
-	imageTD.setTexture(imageToDisplay, true);
-	imageToDisplay.loadFromImage(image);
+	SDL_Surface* surface = SDL_GetWindowSurface(window);
 
+	SDL_Rect pos = { (WINDOW_W - image->w) / 2,(WINDOW_H - image->h) / 2,image->w,image->h };
 
-	while (window.isOpen())
-	{		
-		sf::Event sfEvent;
-		while (window.pollEvent(sfEvent))
+	SDL_BlitSurface(image, NULL, surface, &pos);
+
+	SDL_UpdateWindowSurface(window);
+
+	bool shutdown = false;
+	while (!shutdown)
+	{
+		SDL_Event SDLEvent;
+		while (SDL_PollEvent(&SDLEvent))
 		{
-			if (sfEvent.type == sf::Event::Closed)
-				window.close();
+			if (SDLEvent.type == SDL_KEYDOWN && SDLEvent.key.keysym.sym == SDLK_ESCAPE || SDLEvent.type == SDL_QUIT)
+			{
+				shutdown = true;
+				break;
+			}
 		}
-
-		window.clear();
-		window.draw(imageTD);
-		window.display();
 	}
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 }

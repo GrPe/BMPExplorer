@@ -34,4 +34,12 @@ namespace BMPParser
 			return "Invalid Data Format\n";
 		}
 	};
+
+	class SurfaceException : std::exception
+	{
+		const char* what() const override
+		{
+			return "Failed to create an RGB surface\n";
+		}
+	};
 }

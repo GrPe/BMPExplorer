@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 #include "BMPParserException.hpp"
 
 #include <cstdint>
@@ -16,13 +18,11 @@ namespace BMPParser
 
 	struct  BITMAPFILEHEADER
 	{
-
 		WORD bfType;
 		DWORD bfSize;
 		WORD bfReserved1;
 		WORD bfReserved2;
 		DWORD bfOffBits;
-		//friend class BMPParser;
 	};
 
 	struct  BITMAPINFOHEADER
@@ -38,7 +38,6 @@ namespace BMPParser
 		LONG biYPelsPerMeter;
 		DWORD biClrUsed;
 		DWORD biClrImportant;
-		//friend class BMPParser;
 	};
 
 	class BMPParser
@@ -47,9 +46,10 @@ namespace BMPParser
 
 		//handles:
 		std::fstream bmpFile;
-		bool isDataRead{false};
+		bool isDataRead{ false };
 		unsigned int sizeOfData{};
-		uint8_t* data{nullptr};
+		uint8_t* data{ nullptr };
+		SDL_Surface* surface;
 
 		//BitMap Headers:
 		BITMAPFILEHEADER bitMapFileHeader;
@@ -66,10 +66,6 @@ namespace BMPParser
 		BMPParser(BMPParser&&) = delete;
 
 		void Read(std::string filePath);
-		uint8_t* GetRawData();
-		int GetXSize() const noexcept;
-		int GetYSize() const noexcept;
-		//char* GetRawData();
+		SDL_Surface* GetSurface();
 	};
-
 }

@@ -1,20 +1,22 @@
 #pragma once
-#include "SFML\Window.hpp"
-#include "SFML\Graphics.hpp"
+
+#include <SDL.h>
+
+#include <exception>
 
 namespace BMPViewer
 {
 	class BMPViewer
 	{
 	private:
-		sf::Image image;
+		const int WINDOW_W{ 1200 };
+		const int WINDOW_H{ 1000 };
 	public:
 		BMPViewer() = default;
 		~BMPViewer() = default;
 		BMPViewer(BMPViewer&) = default;
 		BMPViewer(BMPViewer&&) = delete;
 
-		void LoadBitMap(sf::Uint8* rawData, int sizeX, int sizeY);
-		void ShowBitMap();
+		void ShowBitMap(SDL_Surface* image);
 	};
 }

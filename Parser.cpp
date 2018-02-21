@@ -1,5 +1,4 @@
 #include "Parser.hpp"
-#include <iostream>
 
 void BMPParser::BMPParser::ReadFileHeader()
 {
@@ -67,24 +66,44 @@ void BMPParser::BMPParser::ReadInfoHeader()
 void BMPParser::BMPParser::ReadData()
 {
 	sizeOfData = abs(bitMapInfoHeader.biWidth*bitMapInfoHeader.biHeight*(bitMapInfoHeader.biBitCount / 8));
-	data = new uint8_t[sizeOfData];
-	std::unique_ptr<char[]> buffer(new char[sizeOfData]);
-	bmpFile.read(buffer.get(), sizeOfData);
-	std::memcpy(data, buffer.get(), sizeOfData);
-	//for (int i = 0; i < sizeOfData/3; i ++)
-	//{
-		//bmpFile.read(buffer.get(), 3);
-		//std::memcpy(data + i * 3, buffer.get(), 3);
-	//}
-	//std::unique_ptr<unsigned char[]> buffer(new unsigned char[sizeOfData]);
-	//bmpFile.read(reinterpret_cast<char*>(buffer.get()), sizeOfData);
-	//std::memcpy(data, buffer.get(), sizeOfData);
-	//std::cerr << std::hex << (int)data[0x222c35-54] << std::endl;
-	//std::cerr << bmpFile.tellg() << std::endl;
+	surface = SDL_CreateRGBSurface(0, bitMapInfoHeader.biWidth, bitMapInfoHeader.biHeight, bitMapInfoHeader.biBitCount,
+		0xff0000, 0x00ff00, 0x0000ff, 0);
+	if (surface == NULL) throw SurfaceException();
+
+	if (static_cast<int>(bmpFile.tellg()) != bitMapFileHeader.bfOffBits) 
+		bmpFile.seekg(bitMapFileHeader.bfOffBits, SEEK_SET);
+
+	uint32_t pitch = (bitMapInfoHeader.biWidth * 3 + 3)&~3U;
+	uint32_t y = 0;
+	int32_t dy = 1;
+	if (bitMapInfoHeader.biHeight < 0)
+	{
+		y = 0;
+		dy = 1;
+	}
+	else
+	{
+		y = bitMapInfoHeader.biHeight - 1;
+		dy = -1;
+	}
+	uint8_t *pixels = reinterpret_cast<uint8_t*>(&surface->pixels);
+	auto buffer = new char[sizeOfData];
+
+	while (y >= 0 && y < bitMapInfoHeader.biHeight)
+	{
+		bmpFile.read(&buffer[y*surface->pitch],bitMapInfoHeader.biWidth*3);
+		y += dy;
+	}
+	surface->pixels = reinterpret_cast<uint8_t*>(buffer);
 }
 
 BMPParser::BMPParser::~BMPParser()
 {
+	if (surface != NULL)
+	{
+		SDL_FreeSurface(surface);
+		surface = NULL;
+	}
 	if (data != nullptr) delete[] data;
 	if (bmpFile.is_open()) bmpFile.close();
 }
@@ -115,21 +134,7 @@ void BMPParser::BMPParser::Read(std::string filePath)
 	bmpFile.close();
 }
 
-uint8_t * BMPParser::BMPParser::GetRawData()
+SDL_Surface * BMPParser::BMPParser::GetSurface()
 {
-	return data;
-}
-
-int BMPParser::BMPParser::GetXSize() const noexcept
-{
-	if (isDataRead) 
-		return bitMapInfoHeader.biWidth;
-	else return 0;
-}
-
-int BMPParser::BMPParser::GetYSize() const noexcept
-{
-	if (isDataRead)
-		return bitMapInfoHeader.biHeight;
-	else return 0;
+	return surface;
 }
